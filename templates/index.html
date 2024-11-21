@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Chatbot</title>
+</head>
+<body>
+    <h1>Translation Chatbot</h1>
+    <textarea id="text" placeholder="Enter text to translate" rows="5" cols="40"></textarea><br>
+    <label for="source_lang">Source Language:</label>
+    <select id="source_lang">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="de">German</option>
+        <option value="it">Italian</option>
+        <option value="zh">Chinese</option>
+        <option value="ar">Arabic</option>
+    </select><br>
+    <label for="target_lang">Target Language:</label>
+    <select id="target_lang">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="de">German</option>
+        <option value="it">Italian</option>
+        <option value="zh">Chinese</option>
+        <option value="ar">Arabic</option>
+    </select><br><br>
+    <button onclick="handleTranslation()">Translate</button>
+    <h2>Translation:</h2>
+    <p id="result">Your translation will appear here...</p>
+
+    <!-- Include the JavaScript code here -->
+    <script>
+        async function handleTranslation() {
+            const text = document.getElementById("text").value;
+            const source_lang = document.getElementById("source_lang").value;
+            const target_lang = document.getElementById("target_lang").value;
+
+            try {
+                const response = await fetch("/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text, source_lang, target_lang })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                document.getElementById("result").innerText = data.translation;
+            } catch (error) {
+                console.error("Error in translation:", error);
+                document.getElementById("result").innerText = "Translation failed. Please try again.";
+            }
+        }
+
+    </script>
+</body>
+
+</html>
